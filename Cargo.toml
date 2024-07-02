@@ -1,6 +1,6 @@
 [package]
 name = "isx"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Traits for checking certain conditions of values"
 authors = ["Jens Reimann <ctron@dentrassi.de>"]
@@ -8,5 +8,6 @@ license = "MIT"
 repository = "https://github.com/ctron/is-x"
 categories = ["data-structures"]
 keywords = ["traits"]
+readme = "README.md"
 
 [dependencies]
