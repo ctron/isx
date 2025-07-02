@@ -94,4 +94,4 @@ pub fn derive_is_default_impl(input: TokenStream) -> TokenStream {
         }
     };
     TokenStream::from(expanded)
-} 
+}

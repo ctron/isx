@@ -63,4 +63,4 @@ pub fn derive_is_empty_impl(input: TokenStream) -> TokenStream {
         }
     };
     TokenStream::from(expanded)
-} 
+}
