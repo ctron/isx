@@ -14,7 +14,7 @@ Also see: <https://internals.rust-lang.org/t/traits-for-is-empty-and-or-is-defau
 For the `IsDefault` trait:
 
 ```rust
-use isx::prelude::*;
+use isx::IsDefault;
 
 fn test() {
     assert!(false.is_default());
@@ -25,7 +25,7 @@ fn test() {
 For the `IsEmpty` trait:
 
 ```rust
-use isx::prelude::*;
+use isx::IsEmpty;
 
 fn test() {
     assert!(vec![].is_empty());
@@ -75,8 +75,3 @@ struct MyData {
     flag: bool,
 }
 ```
-
-## ToDo
-
-* Implement a derive for `IsDefault`
-* Implement a derive for `IsEmpty`
