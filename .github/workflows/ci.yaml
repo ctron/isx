@@ -66,6 +66,8 @@ jobs:
 
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.rust }}
 
       - name: Install Rust ${{ matrix.rust }}
         run: |
