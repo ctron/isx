@@ -1,7 +1,7 @@
 [package]
 name = "isx"
 version = "0.1.1"
-edition = "2021"
+edition = "2024"
 description = "Traits for checking certain conditions of values"
 authors = ["Jens Reimann <ctron@dentrassi.de>"]
 license = "MIT"
@@ -9,5 +9,7 @@ repository = "https://github.com/ctron/is-x"
 categories = ["data-structures"]
 keywords = ["traits"]
 readme = "README.md"
+
+rust-version = "1.85.0"
 
 [dependencies]

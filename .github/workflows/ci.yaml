@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    # Run on the main branch
+    branches:
+      - main
+      - release/*
+  # Also on PRs, just be careful not to publish anything
+  pull_request:
+  # Required for merge queue check
+  merge_group:
+    types:
+      - checks_requested
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: webiny/action-conventional-commits@v1.3.0
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Check formatting
+        run: |
+          cargo fmt --check
+
+  msrv:
+    runs-on: ubuntu-latest
+    outputs:
+      rust-version: ${{ steps.get-version.outputs.rust-version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract version
+        id: get-version
+        run: |
+          MSRV=$(cargo metadata --no-deps --format-version=1 | jq -r '.packages[0].rust_version')
+          echo "rust-version=$MSRV" >> $GITHUB_OUTPUT
+      - name: Show version
+        run: |
+          echo "MSRV: ${{ steps.get-version.outputs.rust-version }}"
+
+  check:
+    needs:
+      - msrv
+      - preflight
+
+    strategy:
+      matrix:
+
+        rust:
+          - stable
+          - ${{ needs.msrv.outputs.rust-version }}
+
+        os:
+          - ubuntu-24.04
+          - windows-2022
+          - macos-14
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Dump matrix config
+        run: echo "${{ toJSON(matrix) }}"
+
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install Rust ${{ matrix.rust }}
+        run: |
+          rustup install ${{ matrix.rust }} --no-self-update --component clippy
+
+      - name: Tree
+        run: cargo +${{ matrix.rust }} tree ${{ matrix.args }}
+
+      - name: Clippy
+        run: cargo +${{ matrix.rust }} clippy ${{ matrix.args }} --all-targets --tests --bins --all -- -D warnings
+
+      - name: Test
+        run: cargo +${{ matrix.rust }} test ${{ matrix.args }}
+
+  ci:
+    runs-on: ubuntu-latest
+    needs:
+      - preflight
+      - check
+    if: always()
+    steps:
+      - name: Success
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Failure
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
