@@ -1,20 +1,16 @@
-[package]
-name = "isx"
+[workspace]
+resolver = "3"
+members = [
+    "isx",
+    "isx-macros",
+]
+
+[workspace.package]
 version = "0.1.1"
 edition = "2024"
-description = "Traits for checking certain conditions of values"
-authors = ["Jens Reimann <ctron@dentrassi.de>"]
 license = "MIT"
-repository = "https://github.com/ctron/is-x"
-categories = ["data-structures"]
-keywords = ["traits"]
-readme = "README.md"
-
 rust-version = "1.85.0"
 
-[dependencies]
-isx-macros = { path = "isx-macros" }
-
-[package.metadata.release]
+[workspace.metadata.release]
 tag = false
 tag-name = "v{{version}}"

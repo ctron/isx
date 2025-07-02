@@ -1,6 +1,6 @@
 [package]
-name = "isx-macros"
-description = "Macros for implementing traits for checking certain conditions of values"
+name = "isx"
+description = "Traits for checking certain conditions of values"
 authors = ["Jens Reimann <ctron@dentrassi.de>"]
 repository = "https://github.com/ctron/is-x"
 categories = ["data-structures"]
@@ -12,9 +12,5 @@ license.workspace = true
 rust-version.workspace = true
 version.workspace = true
 
-[lib]
-proc-macro = true
-
 [dependencies]
-quote = "1"
-syn = { version = "2", features = ["full"] }
+isx-macros = { path = "../isx-macros", version = "0.1.1" }
