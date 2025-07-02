@@ -1,19 +1,21 @@
 [package]
-name = "isx"
+name = "isx-macros"
 version = "0.1.1"
 edition = "2024"
-description = "Traits for checking certain conditions of values"
+description = "Macros for implementing traits for checking certain conditions of values"
 authors = ["Jens Reimann <ctron@dentrassi.de>"]
 license = "MIT"
 repository = "https://github.com/ctron/is-x"
 categories = ["data-structures"]
 keywords = ["traits"]
-readme = "README.md"
+readme = "../README.md"
 
-rust-version = "1.85.0"
+[lib]
+proc-macro = true
 
 [dependencies]
-isx-macros = { path = "isx-macros" }
+quote = "1"
+syn = { version = "2", features = ["full"] }
 
 [package.metadata.release]
 tag = false

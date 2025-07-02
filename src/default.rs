@@ -1,15 +1,35 @@
 //! Check if a value is the default.
 //!
 //! ```rust
-//! use isx::prelude::*;
+//! use isx::IsDefault;
 //!
 //! fn test () {
 //!   assert!(false.is_default());
 //!   assert!(true.is_not_default());
 //! }
 //! ```
+//!
+//! You can also implement this using a derive for your own types:
+//!
+//! ```rust
+//! use isx::IsDefault;
+//!
+//! #[derive(Default, IsDefault)]
+//! struct MyStruct {
+//!   foo: String,
+//!   bar: bool,
+//! }
+//!
+//! fn test() {
+//!   assert!(MyStruct::default().is_default())
+//! }
+//! ```
 
-use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet};
+pub use isx_macros::IsDefault;
+use std::{
+    collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet},
+    marker::PhantomData,
+};
 
 /// Check if the value represents the default value.
 pub trait IsDefault: Default {
@@ -92,5 +112,17 @@ empty_impl!(HashSet<T>);
 impl<T: Ord> IsDefault for BinaryHeap<T> {
     fn is_default(&self) -> bool {
         self.is_empty()
+    }
+}
+
+impl<T> IsDefault for PhantomData<T> {
+    fn is_default(&self) -> bool {
+        true
+    }
+}
+
+impl<T> IsDefault for Option<T> {
+    fn is_default(&self) -> bool {
+        self.is_none()
     }
 }
