@@ -12,5 +12,5 @@ license = "MIT"
 rust-version = "1.85.0"
 
 [workspace.metadata.release]
-tag = false
+tag = true
 tag-name = "v{{version}}"
