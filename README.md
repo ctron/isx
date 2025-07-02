@@ -1,5 +1,10 @@
 # is-x
 
+[![crates.io](https://img.shields.io/crates/v/isx.svg)](https://crates.io/crates/isx)
+[![docs.rs](https://docs.rs/isx/badge.svg)](https://docs.rs/isx)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/tag/ctron/isx?sort=semver)](https://github.com/ctron/isx/releases)
+[![CI](https://github.com/ctron/isx/actions/workflows/ci.yaml/badge.svg)](https://github.com/ctron/isx/actions/workflows/ci.yaml)
+
 Traits for checking certain conditions of values: is empty? is default?
 
 Also see: <https://internals.rust-lang.org/t/traits-for-is-empty-and-or-is-default/21114>
@@ -11,7 +16,7 @@ For the `IsDefault` trait:
 ```rust
 use isx::prelude::*;
 
-fn test () {
+fn test() {
     assert!(false.is_default());
     assert!(true.is_not_default());
 }
@@ -22,7 +27,7 @@ For the `IsEmpty` trait:
 ```rust
 use isx::prelude::*;
 
-fn test () {
+fn test() {
     assert!(vec![].is_empty());
     assert!(None::<()>.is_empty());
 }
@@ -47,7 +52,7 @@ struct MyData {
     map: HashMap<String, String>,
     #[serde(default, skip_serializing_if = "IsEmpty::is_empty")]
     optional: Option<String>,
-    
+
     #[serde(default, skip_serializing_if = "IsDefault::is_default")]
     flag: bool,
 
@@ -65,7 +70,7 @@ struct MyData {
     list: Vec<String>,
     #[serde(default, skip_serializing_empty)]
     map: HashMap<String, String>,
-    
+
     #[serde(default, skip_serializing_default)]
     flag: bool,
 }
