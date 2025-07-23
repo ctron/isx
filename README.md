@@ -33,6 +33,17 @@ fn test() {
 }
 ```
 
+Using a `derive` this can be implemented easily for custom types:
+
+```rust
+use isx::{IsDefault, IsEmpty};
+
+#[derive(Default, IsDefault, IsEmpty)]
+struct MyStruct {
+    s: String,
+}
+```
+
 ## Why?
 
 Because in same cases, it would be great to have a common pattern:
