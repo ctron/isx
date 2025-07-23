@@ -16,6 +16,7 @@ version.workspace = true
 isx-macros = { path = "../isx-macros", version = "0.1.4" }
 
 bytes = { version = "1", optional = true, default-features = false }
+serde_json = { version = "1", optional = true, default-features = false, features = ["alloc"] } # serde_json requires alloc
 
 [features]
 default = ["std"]
