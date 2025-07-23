@@ -76,11 +76,23 @@ jobs:
       - name: Tree
         run: cargo +${{ matrix.rust }} tree ${{ matrix.args }}
 
+      - name: Install binstall
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+
+      - name: Install cargo-hack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cargo binstall -y cargo-hack --force
+
       - name: Clippy
-        run: cargo +${{ matrix.rust }} clippy ${{ matrix.args }} --all-targets --tests --bins --all -- -D warnings
+        run: cargo +${{ matrix.rust }} hack clippy --feature-powerset ${{ matrix.args }} --all-targets --tests --bins --all -- -D warnings
 
       - name: Test
-        run: cargo +${{ matrix.rust }} test ${{ matrix.args }}
+        run: cargo +${{ matrix.rust }} hack test --feature-powerset ${{ matrix.args }}
 
       - name: SemVer
         uses: obi1kenobi/cargo-semver-checks-action@v2
