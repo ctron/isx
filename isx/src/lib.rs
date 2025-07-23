@@ -13,6 +13,7 @@ extern crate alloc;
 pub mod default;
 pub mod empty;
 
+/// The prelude, including everything necessary
 pub mod prelude {
     pub use crate::default::*;
     pub use crate::empty::*;
