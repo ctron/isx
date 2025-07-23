@@ -1,7 +1,6 @@
 //! Check if a value is empty
 //!
 //! ```rust
-//! use std::collections::HashMap;
 //! use isx::IsEmpty;
 //!
 //! fn assert<V: IsEmpty>(v: V) {
@@ -9,25 +8,47 @@
 //! }
 //!
 //! fn test() {
-//!   assert(String::default());
+//!   assert("");
 //!   assert([0u8;0]);
-//!   assert(Vec::<String>::new());
-//!   assert(HashMap::<String,String>::new())
 //! }
 //! ```
-//!
-//! You can also implement [`IsEmpty`] for your own type using a derive:
-//!
-//! ```rust
-//! use isx_macros::IsEmpty;
-//!
-//! #[derive(IsEmpty)]
-//! struct MyStruct {
-//!     foo: String,
-//!     bar: Vec<String>,
-//! }
-//! ```
-use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet};
+
+#![cfg_attr(
+    feature = "std",
+    doc = r#"
+```rust
+use std::collections::HashMap;
+use isx::IsEmpty;
+
+fn assert<V: IsEmpty>(v: V) {
+  assert!(v.is_empty());
+}
+
+fn test() {
+  assert(String::default());
+  assert(Vec::<String>::new());
+  assert(HashMap::<String,String>::new())
+}
+```
+
+You can also implement [`IsEmpty`] for your own type using a derive:
+
+```rust
+use isx_macros::IsEmpty;
+
+#[derive(IsEmpty)]
+struct MyStruct {
+    foo: String,
+    bar: Vec<String>,
+}
+```
+"#
+)]
+
+#[cfg(feature = "alloc")]
+mod alloc;
+#[cfg(feature = "std")]
+mod std;
 
 pub use isx_macros::IsEmpty;
 
@@ -46,7 +67,7 @@ pub use isx_macros::IsEmpty;
 ///
 /// ## Derive
 ///
-/// This trait can be implemented using a derive. In this case `is_empty` will return `true` if:
+/// This trait can be implemented using a derive. In this case, `is_empty` will return `true` if:
 ///
 /// * There are no fields in the struct or enum
 /// * All fields implement `IsEmpty` and return `true` when calling `IsEmpty::is_empty`.
@@ -54,28 +75,38 @@ pub trait IsEmpty {
     fn is_empty(&self) -> bool;
 }
 
+#[allow(unused_macros)]
 macro_rules! default_impl {
     ($n:ident) => {
-        impl IsEmpty for $n {
+        impl $crate::IsEmpty for $n {
             fn is_empty(&self) -> bool {
-                self.is_empty()
+                <$n>::is_empty(self)
             }
         }
     };
     ($n:ident<$t:ident>) => {
-        impl<$t> IsEmpty for $n<$t> {
+        impl<$t> $crate::IsEmpty for $n<$t> {
             fn is_empty(&self) -> bool {
-                self.is_empty()
+                <$n<$t>>::is_empty(self)
             }
         }
     };
     ($n:ident<$($t:ident),+>) => {
-        impl<$($t),+> IsEmpty for $n<$($t),+> {
+        impl<$($t),+> $crate::IsEmpty for $n<$($t),+> {
             fn is_empty(&self) -> bool {
-                self.is_empty()
+                <$n<$($t),+>>::is_empty(self)
             }
         }
     };
+}
+
+#[allow(unused_imports)]
+pub(crate) use default_impl;
+
+impl IsEmpty for &str {
+    fn is_empty(&self) -> bool {
+        str::is_empty(self)
+    }
 }
 
 impl<T> IsEmpty for Option<T> {
@@ -101,11 +132,3 @@ impl IsEmpty for () {
         true
     }
 }
-
-default_impl!(BTreeSet<T>);
-default_impl!(BTreeMap<K,V>);
-default_impl!(BinaryHeap<T>);
-default_impl!(HashSet<T>);
-default_impl!(HashMap<K,V>);
-default_impl!(String);
-default_impl!(Vec<T>);

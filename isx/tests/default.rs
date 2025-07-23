@@ -2,7 +2,7 @@ use isx::IsDefault;
 
 #[derive(IsDefault, Default, Debug, PartialEq)]
 struct MyStruct {
-    foo: String,
+    foo: &'static str,
     bar: bool,
 }
 
@@ -10,7 +10,7 @@ struct MyStruct {
 enum MyEnum {
     #[default]
     Unit,
-    Tuple(u8, String),
+    Tuple(u8, &'static str),
     Struct {
         x: bool,
     },
@@ -21,7 +21,7 @@ fn struct_default() {
     assert!(MyStruct::default().is_default());
     assert!(
         !MyStruct {
-            foo: "hi".into(),
+            foo: "hi",
             bar: false
         }
         .is_default()
@@ -31,7 +31,7 @@ fn struct_default() {
 #[test]
 fn enum_default() {
     assert!(MyEnum::default().is_default());
-    assert!(!MyEnum::Tuple(0, String::new()).is_default());
+    assert!(!MyEnum::Tuple(0, "").is_default());
     assert!(!MyEnum::Struct { x: false }.is_default());
 }
 
@@ -46,18 +46,21 @@ fn option_default() {
     assert!(!Some(1u8).is_default());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn vec_default() {
     assert!(Vec::<u8>::new().is_default());
     assert!(!vec![1u8].is_default());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn string_default() {
     assert!(String::new().is_default());
     assert!(!"hi".to_string().is_default());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn hashmap_default() {
     use std::collections::HashMap;
@@ -65,6 +68,7 @@ fn hashmap_default() {
     assert!(!HashMap::from([(1u8, 2u8)]).is_default());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn hashset_default() {
     use std::collections::HashSet;
@@ -72,6 +76,7 @@ fn hashset_default() {
     assert!(!HashSet::from([1u8]).is_default());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn btreemap_default() {
     use std::collections::BTreeMap;
@@ -79,6 +84,7 @@ fn btreemap_default() {
     assert!(!BTreeMap::from([(1u8, 2u8)]).is_default());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn btreeset_default() {
     use std::collections::BTreeSet;
@@ -86,6 +92,7 @@ fn btreeset_default() {
     assert!(!BTreeSet::from([1u8]).is_default());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn binaryheap_default() {
     use std::collections::BinaryHeap;

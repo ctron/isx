@@ -2,17 +2,17 @@ use isx::IsEmpty;
 
 #[derive(IsEmpty, Default, Debug, PartialEq)]
 struct MyStruct {
-    foo: String,
-    bar: Vec<u8>,
+    foo: &'static str,
+    bar: &'static [u8],
 }
 
 #[derive(IsEmpty, Default, Debug, PartialEq)]
 enum MyEnum {
     #[default]
     Unit,
-    Tuple(Vec<u8>, String),
+    Tuple(&'static [u8], &'static str),
     Struct {
-        x: Vec<u8>,
+        x: &'static [u8],
     },
 }
 
@@ -21,8 +21,8 @@ fn struct_empty() {
     assert!(MyStruct::default().is_empty());
     assert!(
         !MyStruct {
-            foo: "hi".into(),
-            bar: vec![]
+            foo: "hi",
+            bar: &[]
         }
         .is_empty()
     );
@@ -31,8 +31,8 @@ fn struct_empty() {
 #[test]
 fn enum_empty() {
     assert!(MyEnum::default().is_empty());
-    assert!(MyEnum::Tuple(vec![], String::new()).is_empty());
-    assert!(MyEnum::Struct { x: vec![] }.is_empty());
+    assert!(MyEnum::Tuple(&[], "").is_empty());
+    assert!(MyEnum::Struct { x: &[] }.is_empty());
 }
 
 #[test]
@@ -59,18 +59,21 @@ fn option_empty() {
     assert!(!Some(1u8).is_empty());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn vec_empty() {
     assert!(Vec::<u8>::new().is_empty());
     assert!(!vec![1u8].is_empty());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn string_empty() {
     assert!(String::new().is_empty());
     assert!(!"hi".to_string().is_empty());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn hashmap_empty() {
     use std::collections::HashMap;
@@ -78,6 +81,7 @@ fn hashmap_empty() {
     assert!(!HashMap::from([(1u8, 2u8)]).is_empty());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn hashset_empty() {
     use std::collections::HashSet;
@@ -85,6 +89,7 @@ fn hashset_empty() {
     assert!(!HashSet::from([1u8]).is_empty());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn btreemap_empty() {
     use std::collections::BTreeMap;
@@ -92,6 +97,7 @@ fn btreemap_empty() {
     assert!(!BTreeMap::from([(1u8, 2u8)]).is_empty());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn btreeset_empty() {
     use std::collections::BTreeSet;
@@ -99,6 +105,7 @@ fn btreeset_empty() {
     assert!(!BTreeSet::from([1u8]).is_empty());
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn binaryheap_empty() {
     use std::collections::BinaryHeap;
