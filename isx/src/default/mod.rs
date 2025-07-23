@@ -33,6 +33,8 @@ fn test() {
 
 #[cfg(feature = "alloc")]
 mod alloc;
+#[cfg(feature = "bytes")]
+mod bytes;
 #[cfg(feature = "std")]
 mod std;
 
@@ -70,6 +72,13 @@ macro_rules! default_impl {
 
 #[allow(unused_macros)]
 macro_rules! empty_impl {
+    ($n:ident) => {
+        impl $crate::IsDefault for $n {
+            fn is_default(&self) -> bool {
+                self.is_empty()
+            }
+        }
+    };
     ($n:ident<$($t:ident),+>) => {
         impl <$($t),+> $crate::IsDefault for $n<$($t),+> {
             fn is_default(&self) -> bool {

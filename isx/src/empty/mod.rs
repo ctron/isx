@@ -47,6 +47,8 @@ struct MyStruct {
 
 #[cfg(feature = "alloc")]
 mod alloc;
+#[cfg(feature = "bytes")]
+mod bytes;
 #[cfg(feature = "std")]
 mod std;
 
