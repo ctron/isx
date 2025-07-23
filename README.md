@@ -86,3 +86,9 @@ struct MyData {
     flag: bool,
 }
 ```
+
+## `#[no_std]`
+
+This crate has a `std` and `alloc` feature, which are enabled by default. However, you can make it `#[no_std]` by
+using `default_features = true`. It then is possible to enable support for `alloc` types (like `String` and `Vec`)
+using the `alloc` feature.
