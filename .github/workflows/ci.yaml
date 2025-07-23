@@ -89,10 +89,10 @@ jobs:
           cargo binstall -y cargo-hack --force
 
       - name: Clippy
-        run: cargo +${{ matrix.rust }} hack clippy --feature-powerset ${{ matrix.args }} --all-targets --tests --bins --all -- -D warnings
+        run: cargo +${{ matrix.rust }} hack clippy --feature-powerset --optional-deps ${{ matrix.args }} --all-targets --tests --bins --all -- -D warnings
 
       - name: Test
-        run: cargo +${{ matrix.rust }} hack test --feature-powerset ${{ matrix.args }}
+        run: cargo +${{ matrix.rust }} hack test --feature-powerset --optional-deps ${{ matrix.args }}
 
       - name: SemVer
         uses: obi1kenobi/cargo-semver-checks-action@v2
