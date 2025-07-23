@@ -35,6 +35,8 @@ fn test() {
 mod alloc;
 #[cfg(feature = "bytes")]
 mod bytes;
+#[cfg(feature = "serde_json")]
+mod serde_json;
 #[cfg(feature = "std")]
 mod std;
 
