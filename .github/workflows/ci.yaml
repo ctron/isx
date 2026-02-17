@@ -17,7 +17,7 @@ jobs:
   preflight:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: webiny/action-conventional-commits@v1.3.0
 
       - uses: Swatinem/rust-cache@v2
@@ -31,7 +31,7 @@ jobs:
     outputs:
       rust-version: ${{ steps.get-version.outputs.rust-version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Extract version
         id: get-version
         run: |
@@ -40,6 +40,15 @@ jobs:
       - name: Show version
         run: |
           echo "MSRV: ${{ steps.get-version.outputs.rust-version }}"
+
+  semver:
+    needs:
+      - preflight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: SemVer
+        uses: obi1kenobi/cargo-semver-checks-action@v2
 
   check:
     needs:
@@ -94,16 +103,12 @@ jobs:
       - name: Test
         run: cargo +${{ matrix.rust }} hack test --feature-powerset --optional-deps ${{ matrix.args }}
 
-      - name: SemVer
-        uses: obi1kenobi/cargo-semver-checks-action@v2
-        with:
-          rust-toolchain: ${{ matrix.rust }}
-
   ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - preflight
       - check
+      - semver
     if: always()
     steps:
       - name: Success
