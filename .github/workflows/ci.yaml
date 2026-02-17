@@ -19,9 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: webiny/action-conventional-commits@v1.3.0
-
-      - uses: Swatinem/rust-cache@v2
-
       - name: Check formatting
         run: |
           cargo fmt --check
@@ -74,7 +71,7 @@ jobs:
       - name: Dump matrix config
         run: echo "${{ toJSON(matrix) }}"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.rust }}
